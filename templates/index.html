@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Google Drive Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="container">
+    <div class="top-bar">
+        <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+    </div>
+    <h1>&#x1f4c1; Your Google Drive</h1>
+
+    <form action="/upload" method="post" enctype="multipart/form-data" class="upload-form">
+        <p1>Upload a file </p1>
+        <input type="file" name="file" required>
+        <input type="hidden" name="folder_id" value="{{ current_folder }}">
+        <button type="submit" >Upload</button>
+    </form>
+
+    <h2>Files</h2>
+
+    <div class="breadcrumbs">
+        {% for crumb in breadcrumbs %}
+          {% if not loop.last %}
+            <a href="{{ url_for('dashboard') }}?folder_id={{ crumb.id }}">{{ crumb.name }}</a> &gt;
+          {% else %}
+            <span>{{ crumb.name }}</span>
+          {% endif %}
+        {% endfor %}
+    </div>
+    {% if files %}
+        <ul class="file-list">
+            {% for file in files %}
+            <li class="file-row">
+                <div class="file-main">
+                {% if file.mimeType == 'application/vnd.google-apps.folder' %}
+                    &#x1f4c1; <a href="{{ url_for('dashboard') }}?folder_id={{ file.id }}">{{ file.name }}</a>
+                {% else %}
+                    &#128196; {{ file.name }}
+                {% endif %}
+                </div>
+            
+                <div class="file-meta">
+                {% if file.modifiedTime %}
+                    <span class="timestamp">Last modified: {{ file.modifiedTime }}</span>
+                {% endif %}
+            
+                {% if file.mimeType != 'application/vnd.google-apps.folder' %}
+                    <div class="actions">
+                    <button class="more-btn" onclick="toggleOptions('{{ file.id }}')">⋮</button>
+            
+                    <div class="file-options" id="options-{{ file.id }}">
+                        <form action="/download/{{ file.id }}" method="get">
+                        <button type="submit" class="dropdown-btn"> Download</button>
+                        </form>
+                        <form 
+                            action="{{ url_for('delete', file_id=file.id) }}"
+                            method="post"
+                            onsubmit="return confirm('Are you sure you want to permanently delete this file?');"
+                            >
+                            <input type="hidden" name="folder_id" value="{{ current_folder }}">
+                            <button type="submit" class="dropdown-btn"> Delete</button>
+                        </form>
+                    </div>
+                    </div>
+                {% endif %}
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="empty-msg">&#x1f4c1; This folder is empty</p>
+    {% endif %}
+  </div>
+
+  <script>
+    // modal logic for download and delete options when user clicks three dots
+    function toggleOptions(id) {
+
+      document.querySelectorAll('.file-options').forEach(el => el.style.display = 'none');
+  
+      const options = document.getElementById(`options-${id}`);
+      if (options) {
+        options.style.display = 'block';
+      }
+    }
+  
+    document.addEventListener('click', function (e) {
+      const isMoreBtn = e.target.classList.contains('more-btn');
+      const isOptionsBox = e.target.closest('.file-options');
+  
+      if (!isMoreBtn && !isOptionsBox) {
+        document.querySelectorAll('.file-options').forEach(el => el.style.display = 'none');
+      }
+    });
+  </script>
+
+
+
+</body>
+</html>

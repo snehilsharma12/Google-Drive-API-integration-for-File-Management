@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My Google Drive App</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="landingContainer">
+    <h1 class="appHeading">&#x1f4c1; My Google Drive App</h1>
+    <a href="{{ url_for('authorize') }}">
+      <button class="google-btn">Sign in with Google</button>
+    </a>
+  </div>
+</body>
+</html>

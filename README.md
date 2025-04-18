@@ -1,4 +1,4 @@
-# Strac Assessment Google Drive Integration
+# Google Drive Integration
 
 ## Setup
 - Since OAuth require authorized testers, please send me an email with a list of gmail ids that you would like to test app with.

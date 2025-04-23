@@ -1,5 +1,7 @@
 # Google Drive Integration
-
+This is a web application that utilizes Google Drive API to allow the user to manage their files.
+Built with Python and Flask, with a proper front-end to interact with. 
+This is a mini-showcase for my skills in Python, OAuth 2.0 and Flask.
 ## Setup
 - Since OAuth require authorized testers, please send me an email with a list of gmail ids that you would like to test app with.
 - I wil add them to the list of authorized testers.
